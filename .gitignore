@@ -181,3 +181,4 @@ ignored)
 # End of 
 https://www.gitignore.io/api/java,linux,gradle,windows,intellij+all
 
+api.yml
