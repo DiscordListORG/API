@@ -21,8 +21,8 @@ package org.discordlist.api.core
 
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.get
-import netscape.javascript.JSObject
 import org.apache.logging.log4j.LogManager
+import org.discordlist.api.io.Cassandra
 import org.discordlist.api.io.ConfigLoader
 import org.json.JSONObject
 import org.simpleyaml.configuration.file.YamlFile
@@ -32,6 +32,7 @@ class API : IAPI {
     private val log = LogManager.getLogger(API::class.java)
     override val config: YamlFile = ConfigLoader("api.yml").load()
     override val javalin: Javalin
+    override val cassandra:Cassandra
 
     init {
         javalin = Javalin.create().apply {
@@ -41,9 +42,15 @@ class API : IAPI {
             }
         }.start()
 
+        cassandra = Cassandra(config)
+
         javalin.routes {
-            get("/") {ctx ->
-                ctx.result(JSONObject().put("data", JSONObject().put("message","Is this thing on?")).toString()).header("Content-Type","application/json")
+            get("/") { ctx ->
+                ctx.result(JSONObject().put("data", JSONObject().put("message", "Is this thing on?")).toString())
+                    .header("Content-Type", "application/json")
+            }
+            get("/guild/:id") {
+
             }
         }
     }

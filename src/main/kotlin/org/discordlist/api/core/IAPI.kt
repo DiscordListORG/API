@@ -20,6 +20,7 @@
 package org.discordlist.api.core
 
 import io.javalin.Javalin
+import org.discordlist.api.io.Cassandra
 import org.simpleyaml.configuration.file.YamlFile
 
 interface IAPI {
@@ -27,4 +28,6 @@ interface IAPI {
     val config: YamlFile
 
     val javalin: Javalin
+
+    val cassandra:Cassandra
 }
