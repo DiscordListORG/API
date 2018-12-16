@@ -56,7 +56,7 @@ class API : IAPI, ResponseUtil() {
                     ctx.result(formatError(401, "Unauthorized"))
                         .status(401)
                         .header("Content-Type", "application/json")
-                
+
             }
         }
     }
