@@ -17,17 +17,20 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.api.core
+package org.discordlist.api.util
 
-import io.javalin.Javalin
-import org.discordlist.api.io.Cassandra
-import org.simpleyaml.configuration.file.YamlFile
+import org.eclipse.jetty.http.HttpStatus
+import org.json.JSONObject
 
-interface IAPI {
+open class ResponseUtil {
 
-    val config: YamlFile
 
-    val javalin: Javalin
+    fun formatError(code: Int, stack: Any): String {
+        val message = HttpStatus.getCode(code)
+        return JSONObject().put(
+            "data",
+            JSONObject().put("message", "$message").put("error", JSONObject().put("code", code).put("stack", stack))
+        ).toString()
+    }
 
-    val cassandra: Cassandra
 }

@@ -39,6 +39,12 @@ class ConfigLoader(private val file: String) {
         // API
         saveDefault(config, "api.port", 2000)
         saveDefault(config, "api.token", "KaufDirEinMettBrötchen")
+
+        // Cassandra
+        saveDefault(config, "cassandra.keyspace", "KEYSPACE")
+        saveDefault(config, "cassandra.username", "dlo")
+        saveDefault(config, "cassandra.password", "ThisIsSAve")
+        saveDefault(config, "cassandra.contact_points", arrayOf("foryasee.de", "dummi.dom"))
     }
 
     private fun saveDefault(config: YamlFile, path: String, value: Any) {

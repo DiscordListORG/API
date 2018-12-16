@@ -30,11 +30,11 @@ class Cassandra(config: YamlFile) {
 
     val cluster: Cluster
     lateinit var session: Session
-    private val keyspace:String = config.getString("cassandra.keyspace")
+    private val keyspace: String = config.getString("cassandra.keyspace")
 
     init {
         cluster = Cluster.builder().apply {
-            addContactPoints(*config.getStringList("cassandra.contactpoints").toTypedArray())
+            addContactPoints(*config.getStringList("cassandra.contact_points").toTypedArray())
             withCredentials(config.getString("cassandra.username"), config.getString("cassandra.password"))
             withoutJMXReporting()
             withQueryOptions(QueryOptions().apply {

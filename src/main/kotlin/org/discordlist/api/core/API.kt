@@ -24,15 +24,16 @@ import io.javalin.apibuilder.ApiBuilder.get
 import org.apache.logging.log4j.LogManager
 import org.discordlist.api.io.Cassandra
 import org.discordlist.api.io.ConfigLoader
+import org.discordlist.api.util.ResponseUtil
 import org.json.JSONObject
 import org.simpleyaml.configuration.file.YamlFile
 
-class API : IAPI {
+class API : IAPI, ResponseUtil() {
 
     private val log = LogManager.getLogger(API::class.java)
     override val config: YamlFile = ConfigLoader("api.yml").load()
     override val javalin: Javalin
-    override val cassandra:Cassandra
+    override val cassandra: Cassandra
 
     init {
         javalin = Javalin.create().apply {
@@ -43,14 +44,19 @@ class API : IAPI {
         }.start()
 
         cassandra = Cassandra(config)
+        cassandra.connect()
 
         javalin.routes {
             get("/") { ctx ->
                 ctx.result(JSONObject().put("data", JSONObject().put("message", "Is this thing on?")).toString())
                     .header("Content-Type", "application/json")
             }
-            get("/guild/:id") {
-
+            get("/guild/:id") { ctx ->
+                if (ctx.header("Authorization") != config.getString("api.token"))
+                    ctx.result(formatError(401, "Unauthorized"))
+                        .status(401)
+                        .header("Content-Type", "application/json")
+                
             }
         }
     }
