@@ -30,6 +30,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.9.6")
     implementation("com.datastax.cassandra:cassandra-driver-core:3.6.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("redis.clients:jedis:3.0.0-m1")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }

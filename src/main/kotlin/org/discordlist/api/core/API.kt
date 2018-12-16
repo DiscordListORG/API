@@ -19,6 +19,7 @@
 
 package org.discordlist.api.core
 
+import com.datastax.driver.core.DataType
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.get
 import org.apache.logging.log4j.LogManager
@@ -27,6 +28,7 @@ import org.discordlist.api.io.ConfigLoader
 import org.discordlist.api.util.ResponseUtil
 import org.json.JSONObject
 import org.simpleyaml.configuration.file.YamlFile
+import redis.clients.jedis.Jedis
 
 class API : IAPI, ResponseUtil() {
 
@@ -34,6 +36,7 @@ class API : IAPI, ResponseUtil() {
     override val config: YamlFile = ConfigLoader("api.yml").load()
     override val javalin: Javalin
     override val cassandra: Cassandra
+    override val jedis: Jedis
 
     init {
         javalin = Javalin.create().apply {
@@ -46,17 +49,51 @@ class API : IAPI, ResponseUtil() {
         cassandra = Cassandra(config)
         cassandra.connect()
 
+        jedis = Jedis(config.getString("redis.host"))
+        jedis.connect()
+        jedis.auth(config.getString("redis.password"))
+        jedis.flushAll()
+
         javalin.routes {
             get("/") { ctx ->
                 ctx.result(JSONObject().put("data", JSONObject().put("message", "Is this thing on?")).toString())
                     .header("Content-Type", "application/json")
             }
             get("/guild/:id") { ctx ->
-                if (ctx.header("Authorization") != config.getString("api.token"))
+                //TODO: Uncomment when finished
+                /*if (ctx.header("Authorization") != config.getString("api.token"))
                     ctx.result(formatError(401, "Unauthorized"))
                         .status(401)
-                        .header("Content-Type", "application/json")
+                        .header("Content-Type", "application/json")*/
+                if (jedis.exists(ctx.pathParam("id"))) {
+                    ctx.result(formatResult("SUCCESS", jedis.get(ctx.pathParam("id")))).header(
+                        "Content-Type",
+                        "application/json"
+                    ).status(200)
+                } else {
+                    val select =
+                        cassandra.session.execute("SELECT * FROM guilds WHERE id=?", ctx.pathParam("id").toLong()).one()
+                    if (select == null) {
+                        val created = cassandra.session.execute(
+                            "INSERT INTO guilds (id, prefix) VALUES (" +
+                                    "?," +
+                                    "?" +
+                                    ")", ctx.pathParam("id").toLong(), config.getString("discord.prefix")
+                        )
+                        log.info(created)
+                        //ctx.result(formatResult("CREATED", created.one(), 201))
+                    }else {
+                        val data = JSONObject()
+                        select.columnDefinitions.forEach { it ->
+                            when(it.type) {
+                                DataType.bigint() -> data.put(it.name, select.getLong(it.name))
+                                DataType.varchar() -> data.put(it.name, select.getString(it.name))
+                            }
+                        }
+                        ctx.result(formatResult("SUCCESS", data)).status(200).header("Content-Type","application/json")
+                    }
 
+                }
             }
         }
     }

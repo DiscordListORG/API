@@ -21,16 +21,26 @@ package org.discordlist.api.util
 
 import org.eclipse.jetty.http.HttpStatus
 import org.json.JSONObject
+import java.util.*
 
 open class ResponseUtil {
 
 
     fun formatError(code: Int, stack: Any): String {
         val message = HttpStatus.getCode(code)
-        return JSONObject().put(
-            "data",
-            JSONObject().put("message", "$message").put("error", JSONObject().put("code", code).put("stack", stack))
-        ).toString()
+        return JSONObject().put("message", message)
+            .put(
+                "data",
+                JSONObject().put("error", JSONObject().put("code", code).put("stack", stack))
+            ).put("timestamp", Date()).toString()
+    }
+
+    fun formatResult(message: String, data: Any): String {
+        return JSONObject().put("message", message).put("data", data).put("timestamp", Date()).toString()
+    }
+
+    fun formatResult(message: String, data: Any, code: Int): String {
+        return JSONObject().put("message", message).put("data", data).put("timestamp", Date()).put("code",code).toString()
     }
 
 }

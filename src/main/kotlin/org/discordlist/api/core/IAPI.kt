@@ -22,6 +22,7 @@ package org.discordlist.api.core
 import io.javalin.Javalin
 import org.discordlist.api.io.Cassandra
 import org.simpleyaml.configuration.file.YamlFile
+import redis.clients.jedis.Jedis
 
 interface IAPI {
 
@@ -30,4 +31,6 @@ interface IAPI {
     val javalin: Javalin
 
     val cassandra: Cassandra
+
+    val jedis:Jedis
 }
