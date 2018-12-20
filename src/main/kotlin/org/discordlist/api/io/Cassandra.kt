@@ -46,6 +46,15 @@ class Cassandra(config: YamlFile) {
 
     fun connect() {
         session = cluster.connect(keyspace)
+        createDefaults()
+    }
+
+    fun createDefaults() {
+        session.execute("CREATE TABLE IF NOT EXISTS guilds (" +
+                "id bigint," +
+                "prefix varchar," +
+                "PRIMARY KEY (id)" +
+                ")")
     }
 
 }
