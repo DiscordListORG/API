@@ -40,7 +40,8 @@ open class ResponseUtil {
     }
 
     fun formatResult(message: String, data: Any, code: Int): String {
-        return JSONObject().put("message", message).put("data", data).put("timestamp", Date()).put("code",code).toString()
+        return JSONObject().put("message", message).put("data", data).put("timestamp", Date()).put("code", code)
+            .toString()
     }
 
 }

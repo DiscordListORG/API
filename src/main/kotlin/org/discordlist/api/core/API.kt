@@ -60,37 +60,59 @@ class API : IAPI, ResponseUtil() {
                     .header("Content-Type", "application/json")
             }
             get("/guild/:id") { ctx ->
-                //TODO: Uncomment when finished
-                /*if (ctx.header("Authorization") != config.getString("api.token"))
-                    ctx.result(formatError(401, "Unauthorized"))
+                if (ctx.pathParam("id").length != 18) {
+                    ctx.result(formatError(400, "GUILD ID IS NO VALID SNOWFLAKE")).status(400)
+                        .header("Content-Type", "application/json")
+                } else if (ctx.header("Authorization") != config.getString("api.token")) {
+                    ctx.result(formatError(401, "TOKEN IS NOT VALID"))
                         .status(401)
-                        .header("Content-Type", "application/json")*/
-                if (jedis.exists(ctx.pathParam("id"))) {
-                    ctx.result(formatResult("SUCCESS", jedis.get(ctx.pathParam("id")))).header(
-                        "Content-Type",
-                        "application/json"
-                    ).status(200)
+                        .header("Content-Type", "application/json")
+                } else if (jedis.exists(ctx.pathParam("id"))) {
+                    ctx.result(formatResult("SUCCESS", JSONObject((jedis.get(ctx.pathParam("id"))))))
+                        .header(
+                            "Content-Type",
+                            "application/json"
+                        ).status(200)
+                    ctx.result(formatResult("SUCCESS", JSONObject((jedis.get(ctx.pathParam("id"))))))
+                        .header(
+                            "Content-Type",
+                            "application/json"
+                        ).status(200)
                 } else {
                     val select =
                         cassandra.session.execute("SELECT * FROM guilds WHERE id=?", ctx.pathParam("id").toLong()).one()
                     if (select == null) {
-                        val created = cassandra.session.execute(
+                        cassandra.session.execute(
                             "INSERT INTO guilds (id, prefix) VALUES (" +
                                     "?," +
                                     "?" +
                                     ")", ctx.pathParam("id").toLong(), config.getString("discord.prefix")
                         )
-                        log.info(created)
-                        //ctx.result(formatResult("CREATED", created.one(), 201))
-                    }else {
+                        val created =
+                            cassandra.session.execute("SELECT * FROM guilds WHERE id=?", ctx.pathParam("id").toLong())
+                                .one()
                         val data = JSONObject()
+                        created.columnDefinitions.forEach { it ->
+                            when (it.type) {
+                                DataType.bigint() -> data.put(it.name, created.getLong(it.name))
+                                DataType.varchar() -> data.put(it.name, created.getString(it.name))
+                            }
+                        }
+                        jedis.set(ctx.pathParam("id"), data.toString())
+                        ctx.result(formatResult("CREATED", data, 201)).status(201)
+                            .header("Content-Type", "application/json")
+                    } else {
+                        val data = JSONObject()
+                        log.info(select)
                         select.columnDefinitions.forEach { it ->
-                            when(it.type) {
-                                DataType.bigint() -> data.put(it.name, select.getLong(it.name))
+                            when (it.type) {
+                                DataType.bigint() -> data.put(it.name, select.getLong(it.name).toString())
                                 DataType.varchar() -> data.put(it.name, select.getString(it.name))
                             }
                         }
-                        ctx.result(formatResult("SUCCESS", data)).status(200).header("Content-Type","application/json")
+                        log.info(data)
+                        jedis.set(ctx.pathParam("id"), data.toString())
+                        ctx.result(formatResult("SUCCESS", data)).status(200).header("Content-Type", "application/json")
                     }
 
                 }
