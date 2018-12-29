@@ -17,20 +17,19 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.api.core
+package org.discordlist.cloud.api
 
-import io.javalin.Javalin
-import org.discordlist.api.io.Cassandra
-import org.simpleyaml.configuration.file.YamlFile
-import redis.clients.jedis.Jedis
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.core.config.ConfigurationSource
+import org.apache.logging.log4j.core.config.Configurator
+import org.discordlist.cloud.api.core.API
 
-interface IAPI {
+fun main(args: Array<String>) {
+    Configurator.setRootLevel(if (args.isEmpty()) Level.INFO else Level.toLevel(args[0], Level.INFO))
+    Configurator.initialize(
+        ClassLoader.getSystemClassLoader(),
+        ConfigurationSource(ClassLoader.getSystemResourceAsStream("log4j2.xml"))
+    )
 
-    val config: YamlFile
-
-    val javalin: Javalin
-
-    val cassandra: Cassandra
-
-    val jedis:Jedis
+    API()
 }

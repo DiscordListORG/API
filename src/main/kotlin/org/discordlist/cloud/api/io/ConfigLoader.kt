@@ -17,7 +17,7 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.api.io
+package org.discordlist.cloud.api.io
 
 import org.simpleyaml.configuration.file.YamlFile
 

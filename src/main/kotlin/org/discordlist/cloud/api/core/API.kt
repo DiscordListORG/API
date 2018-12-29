@@ -17,15 +17,15 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.api.core
+package org.discordlist.cloud.api.core
 
 import com.datastax.driver.core.DataType
 import io.javalin.Javalin
 import io.javalin.apibuilder.ApiBuilder.get
 import org.apache.logging.log4j.LogManager
-import org.discordlist.api.io.Cassandra
-import org.discordlist.api.io.ConfigLoader
-import org.discordlist.api.util.ResponseUtil
+import org.discordlist.cloud.api.io.Cassandra
+import org.discordlist.cloud.api.io.ConfigLoader
+import org.discordlist.cloud.api.util.ResponseUtil
 import org.json.JSONObject
 import org.simpleyaml.configuration.file.YamlFile
 import redis.clients.jedis.Jedis

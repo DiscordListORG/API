@@ -21,12 +21,10 @@ repositories {
 dependencies {
     implementation("io.javalin:javalin:2.4.0")
     implementation("com.github.Carleslc:Simple-YAML:1.3")
-    implementation("org.json:json:20180813")
     implementation("org.apache.logging.log4j:log4j-api:2.11.1")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:2.11.1")
     implementation("org.apache.logging.log4j:log4j-core:2.11.1")
     implementation("commons-io:commons-io:2.6")
-    implementation("com.google.code.gson:gson:2.8.5")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.9.6")
     implementation("com.datastax.cassandra:cassandra-driver-core:3.6.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
