@@ -17,19 +17,23 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.api
+package org.discordlist.cloud.api.util
 
-import org.apache.logging.log4j.Level
-import org.apache.logging.log4j.core.config.ConfigurationSource
-import org.apache.logging.log4j.core.config.Configurator
-import org.discordlist.api.core.API
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
+import org.eclipse.jetty.http.HttpStatus
 
-fun main(args: Array<String>) {
-    Configurator.setRootLevel(if (args.isEmpty()) Level.INFO else Level.toLevel(args[0], Level.INFO))
-    Configurator.initialize(
-        ClassLoader.getSystemClassLoader(),
-        ConfigurationSource(ClassLoader.getSystemResourceAsStream("log4j2.xml"))
-    )
+open class ResponseUtil {
 
-    API()
+
+    private val mapper:ObjectMapper = ObjectMapper()
+
+
+    fun formatError(code: Int, stack: Any): String {
+        val message = HttpStatus.getCode(code)
+        val jsonObject:ObjectNode = mapper.createObjectNode()
+        return jsonObject.putObject("data").put("message", "$message").put("error", jsonObject.putObject("error").put("code", code).put("stack", stack.toString())).asText()
+
+    }
+
 }
