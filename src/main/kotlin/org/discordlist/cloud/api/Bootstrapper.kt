@@ -27,8 +27,8 @@ import org.discordlist.cloud.api.core.API
 fun main(args: Array<String>) {
     Configurator.setRootLevel(if (args.isEmpty()) Level.INFO else Level.toLevel(args[0], Level.INFO))
     Configurator.initialize(
-        ClassLoader.getSystemClassLoader(),
-        ConfigurationSource(ClassLoader.getSystemResourceAsStream("log4j2.xml"))
+            ClassLoader.getSystemClassLoader(),
+            ConfigurationSource(ClassLoader.getSystemResourceAsStream("log4j2.xml"))
     )
 
     API()

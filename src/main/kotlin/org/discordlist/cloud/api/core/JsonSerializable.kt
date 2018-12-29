@@ -19,18 +19,14 @@
 
 package org.discordlist.cloud.api.core
 
-import io.javalin.Javalin
-import org.discordlist.cloud.api.io.Cassandra
-import org.simpleyaml.configuration.file.YamlFile
-import redis.clients.jedis.Jedis
+import com.fasterxml.jackson.databind.ObjectMapper
 
-interface IAPI {
+abstract class JsonSerializable {
 
-    val config: YamlFile
+    private val objectMapper: ObjectMapper = ObjectMapper()
 
-    val javalin: Javalin
+    fun toJson(): String {
+        return objectMapper.writeValueAsString(this)
+    }
 
-    val cassandra: Cassandra
-
-    val jedis: Jedis
 }

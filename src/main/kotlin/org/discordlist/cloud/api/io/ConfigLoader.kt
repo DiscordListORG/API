@@ -45,6 +45,10 @@ class ConfigLoader(private val file: String) {
         saveDefault(config, "cassandra.username", "dlo")
         saveDefault(config, "cassandra.password", "ThisIsSAve")
         saveDefault(config, "cassandra.contact_points", arrayOf("foryasee.de", "dummi.dom"))
+
+        //Redis
+        saveDefault(config, "redis.host", "localhost")
+        saveDefault(config, "redis.password", "SuperSafe")
     }
 
     private fun saveDefault(config: YamlFile, path: String, value: Any) {

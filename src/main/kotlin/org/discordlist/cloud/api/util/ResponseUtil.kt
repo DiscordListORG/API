@@ -19,21 +19,55 @@
 
 package org.discordlist.cloud.api.util
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
 import org.eclipse.jetty.http.HttpStatus
+import java.util.*
 
+/**
+ *  General utility for formatting Json Responses
+ */
 open class ResponseUtil {
 
 
-    private val mapper:ObjectMapper = ObjectMapper()
+    private val mapper: ObjectMapper = ObjectMapper()
 
-
-    fun formatError(code: Int, stack: Any): String {
+    /**
+     * Format an Error with stacktrace and status code
+     *
+     * @param code Http-Status Code of response
+     * @param stack Stacktrace of Error. Will be converted to String.
+     * @return returns an [com.fasterxml.jackson.databind.node.ObjectNode] with given data
+     */
+    fun formatError(code: Int, stack: Any): Any {
         val message = HttpStatus.getCode(code)
-        val jsonObject:ObjectNode = mapper.createObjectNode()
-        return jsonObject.putObject("data").put("message", "$message").put("error", jsonObject.putObject("error").put("code", code).put("stack", stack.toString())).asText()
+        val jsonObject: ObjectNode = mapper.createObjectNode()
+        return jsonObject.put("message", "$message").putObject("data").set("error", mapper.createObjectNode().putObject("error").put("code", code).put("stack", stack.toString()))
 
+    }
+
+    /**
+     * Format an Response with data and message
+     *
+     * @param message Response message
+     * @param data Data object of the response. Contains object
+     * @return returns an [com.fasterxml.jackson.databind.node.ObjectNode] with given data
+     */
+    fun formatResult(message: String, data: JsonNode): Any {
+        return mapper.createObjectNode().put("message", message).put("timestamp", Date().time).set("data",data)
+    }
+
+    /**
+     * Format an Response with data, message and status code
+     *
+     * @param message Response message
+     * @param data Data object of the response. Contains object
+     * @param code Http-Status Code of response
+     * @return returns an [com.fasterxml.jackson.databind.node.ObjectNode] with given data
+     */
+    fun formatResult(message: String, data: ObjectNode, code: Int): Any {
+        return mapper.createObjectNode().put("message", message).put("timestamp", Date().time).put("code", code).set("data", data)
     }
 
 }

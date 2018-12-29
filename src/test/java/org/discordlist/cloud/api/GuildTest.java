@@ -17,20 +17,26 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.cloud.api.core
+package org.discordlist.cloud.api;
 
-import io.javalin.Javalin
-import org.discordlist.cloud.api.io.Cassandra
-import org.simpleyaml.configuration.file.YamlFile
-import redis.clients.jedis.Jedis
+import org.discordlist.cloud.api.entities.Guild;
+import org.junit.Test;
 
-interface IAPI {
+import java.io.IOException;
 
-    val config: YamlFile
+public class GuildTest {
 
-    val javalin: Javalin
+    @Test
+    public void testGuildConverting() throws IOException {
 
-    val cassandra: Cassandra
+        Guild guild = new Guild(10000000L, "gl!");
 
-    val jedis: Jedis
+        // Serialization
+        String jsonData = guild.toJson();
+        System.out.println(jsonData);
+
+        // Deserialization
+        System.out.println(Guild.fromJson(jsonData));
+    }
+
 }
