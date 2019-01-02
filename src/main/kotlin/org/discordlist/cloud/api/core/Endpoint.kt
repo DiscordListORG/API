@@ -1,7 +1,7 @@
 /*
  * API - The API component of the discordlist.org cloud
  *
- * Copyright (C) 2018  Leon Kappes & Yannick Seeger
+ * Copyright (C) 2019  Leon Kappes & Yannick Seeger
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,26 +17,25 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.cloud.api;
+package org.discordlist.cloud.api.core
 
-import org.discordlist.cloud.api.entities.Guild;
-import org.junit.Test;
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.javalin.Context
 
-import java.io.IOException;
+interface Endpoint {
 
-public class GuildTest {
+    val route:String
+    val methode:RequestMethod
+    val mapper: ObjectMapper
+        get() = ObjectMapper()
+    val instace:API
+        get() = API.instance
 
-    @Test
-    public void testGuildConverting() throws IOException {
+    fun run(ctx:Context)
+}
 
-        Guild guild = new Guild(507517900127469568L, "gl!");
+enum class RequestMethod {
 
-        // Serialization
-        String jsonData = guild.toJson();
-        System.out.println(jsonData);
-
-        // Deserialization
-        System.out.println(Guild.fromJson(jsonData));
-    }
+    GET, POST;
 
 }

@@ -39,6 +39,9 @@ class API : IAPI, ResponseUtil() {
     override val javalin: Javalin
     override val cassandra: Cassandra
     override val jedis: Jedis
+    companion object {
+        @JvmStatic lateinit var instance: API
+    }
 
     init {
         javalin = Javalin.create().apply {
@@ -58,8 +61,7 @@ class API : IAPI, ResponseUtil() {
 
         javalin.routes {
             get("/") { ctx ->
-                ctx.json(mapper.createObjectNode().set("data", this.mapper.createObjectNode().put("message", "Is this thing on?")))
-                        .header("Content-Type", "application/json")
+
             }
             get("/guild/:id") { ctx ->
                 if (ctx.pathParam("id").length != 18) {
@@ -114,5 +116,6 @@ class API : IAPI, ResponseUtil() {
                 }
             }
         }
+        instance = this
     }
 }
