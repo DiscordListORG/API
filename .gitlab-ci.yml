@@ -1,5 +1,8 @@
 image: gradle:jdk11
 
+stages:
+  - build
+
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
@@ -19,4 +22,3 @@ build:
     paths:
       - build/libs/*.jar
     expire_in: 1 week
-

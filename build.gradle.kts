@@ -4,6 +4,7 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm").version("1.3.10")
     id("com.github.johnrengelman.shadow").version("4.0.3")
+    id("org.jetbrains.dokka").version("0.9.17")
     application
 }
 
@@ -28,13 +29,16 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.9.6")
     implementation("com.datastax.cassandra:cassandra-driver-core:3.6.0")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("redis.clients:jedis:3.0.0-m1")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
 
+
 application {
     mainClassName = "org.discordlist.api.BootstrapperKt"
 }
+
 
 tasks {
     "shadowJar"(ShadowJar::class) {

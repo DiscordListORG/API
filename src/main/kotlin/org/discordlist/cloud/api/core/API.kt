@@ -19,46 +19,49 @@
 
 package org.discordlist.cloud.api.core
 
+import com.datastax.driver.core.DataType
 import io.javalin.Javalin
-import io.javalin.apibuilder.ApiBuilder.get
+import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
 import org.discordlist.cloud.api.io.Cassandra
 import org.discordlist.cloud.api.io.ConfigLoader
+import org.discordlist.cloud.api.net.http.endpointloader.Loader
 import org.discordlist.cloud.api.util.ResponseUtil
-import org.json.JSONObject
 import org.simpleyaml.configuration.file.YamlFile
+import redis.clients.jedis.Jedis
 
 class API : IAPI, ResponseUtil() {
 
     private val log = LogManager.getLogger(API::class.java)
+    private val mapper: ObjectMapper = ObjectMapper()
     override val config: YamlFile = ConfigLoader("api.yml").load()
     override val javalin: Javalin
     override val cassandra: Cassandra
+    override val jedis: Jedis
+
+    companion object {
+        @JvmStatic
+        lateinit var instance: API
+    }
 
     init {
+        instance = this
         javalin = Javalin.create().apply {
             port(config.getInt("api.port"))
             requestLogger { ctx, executionTimeMs ->
-                log.debug("[REQUEST] ${ctx.method()} ${ctx.path()} took $executionTimeMs ms")
+                log.log(Level.forName("REQUEST", 350), "${ctx.method()} ${ctx.host() + ctx.path()} took ${executionTimeMs*1000} μs")
             }
         }.start()
 
         cassandra = Cassandra(config)
         cassandra.connect()
 
-        javalin.routes {
-            get("/") { ctx ->
-                ctx.result(JSONObject().put("data", JSONObject().put("message", "Is this thing on?")).toString())
-                    .header("Content-Type", "application/json")
-            }
-            get("/guild/:id") { ctx ->
-                if (ctx.header("Authorization") != config.getString("api.token"))
-                    ctx.result(formatError(401, "Unauthorized"))
-                        .status(401)
-                        .header("Content-Type", "application/json")
-                
-            }
-        }
-    }
+        jedis = Jedis(config.getString("redis.host"))
+        jedis.connect()
+        jedis.auth(config.getString("redis.password"))
+        jedis.flushAll()
 
+        Loader()
+
+    }
 }
