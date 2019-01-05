@@ -2,7 +2,6 @@ image: gradle:jdk11
 
 stages:
   - build
-  - pages
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -23,14 +22,3 @@ build:
     paths:
       - build/libs/*.jar
     expire_in: 1 week
-pages:
-  stage: pages
-  script:
-    - 'gradle javadoc'
-    - 'mv target/site/apidocs public'
-  artifacts:
-    paths:
-      - 'public'
-  only:
-    - 'master'
-
