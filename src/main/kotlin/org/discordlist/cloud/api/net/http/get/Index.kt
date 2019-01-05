@@ -17,18 +17,22 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.cloud.api.net.http
+package org.discordlist.cloud.api.net.http.get
 
 import io.javalin.Context
 import org.discordlist.cloud.api.core.Endpoint
 import org.discordlist.cloud.api.core.RequestMethod
+import org.discordlist.cloud.api.util.AuthUtil
 
-class IndexRoute : Endpoint {
+class IndexRoute : Endpoint, AuthUtil() {
     override val route: String = "/"
     override val methode: RequestMethod = RequestMethod.GET
 
-    override fun run(ctx: Context) {
-        ctx.json(mapper.createObjectNode().set("data", this.mapper.createObjectNode().put("message", "Is this thing on?")))
-                .header("Content-Type", "application/json")
+    override fun run(ctx: Context):Context {
+        return if(checkDefaultAuth(ctx))
+            ctx.json(mapper.createObjectNode().set("data", this.mapper.createObjectNode().put("message", "Is this thing on?")))
+                    .header("Content-Type", "application/json")
+        else
+            respondUnauthorized(ctx)
     }
 }
