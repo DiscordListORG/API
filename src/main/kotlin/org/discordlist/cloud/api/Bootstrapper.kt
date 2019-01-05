@@ -24,6 +24,7 @@ import org.apache.logging.log4j.core.config.ConfigurationSource
 import org.apache.logging.log4j.core.config.Configurator
 import org.discordlist.cloud.api.core.API
 
+
 fun main(args: Array<String>) {
     Configurator.setRootLevel(if (args.isEmpty()) Level.INFO else Level.toLevel(args[0], Level.INFO))
     Configurator.initialize(
@@ -33,3 +34,4 @@ fun main(args: Array<String>) {
 
     API()
 }
+

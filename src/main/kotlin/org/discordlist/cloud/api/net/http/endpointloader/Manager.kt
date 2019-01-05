@@ -17,25 +17,28 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.cloud.api.net.http.get
+package org.discordlist.cloud.api.net.http.endpointloader
 
 import io.javalin.Context
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+import org.discordlist.cloud.api.core.API
 import org.discordlist.cloud.api.core.Endpoint
 import org.discordlist.cloud.api.core.RequestMethod
-import org.discordlist.cloud.api.util.AuthUtil
 
-class Index : Endpoint, AuthUtil() {
-    override val logger: Logger = LogManager.getLogger(this.javaClass)
-    override val route: String = "/"
-    override val methode: RequestMethod = RequestMethod.GET
+class Manager {
 
-    override fun run(ctx: Context):Context {
-        return if(checkDefaultAuth(ctx))
-            ctx.json(mapper.createObjectNode().set("data", this.mapper.createObjectNode().put("message", "Is this thing on?")))
-                    .header("Content-Type", "application/json")
-        else
-            respondUnauthorized(ctx)
+    private val instance:API = API.instance
+
+    fun registerEndpoint(endpoint: Endpoint) {
+        when(endpoint.methode) {
+            RequestMethod.GET -> instance.javalin.get(endpoint.route) { ctx: Context -> endpoint.run(ctx) }
+            RequestMethod.POST -> instance.javalin.get(endpoint.route) { ctx: Context -> endpoint.run(ctx)  }
+        }
     }
+
+    fun registerEndpoints(vararg  endpoints: Endpoint) {
+        for (endpoint:Endpoint in endpoints){
+            registerEndpoint(endpoint)
+        }
+    }
+
 }

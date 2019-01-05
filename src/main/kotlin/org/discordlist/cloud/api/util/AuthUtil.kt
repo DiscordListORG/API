@@ -17,28 +17,20 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.cloud.api.core
+package org.discordlist.cloud.api.util
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.javalin.Context
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+import org.discordlist.cloud.api.core.API
 
-interface Endpoint {
+open class AuthUtil {
 
-    val route:String
-    val methode:RequestMethod
-    val logger:Logger
-    val mapper: ObjectMapper
-        get() = ObjectMapper()
-    val instace:API
-        get() = API.instance
+    fun checkDefaultAuth(ctx: Context): Boolean {
+        return ctx.header("Authorization") == API.instance.config.getString("api.token")
+    }
 
-    fun run(ctx:Context): Context
-}
-
-enum class RequestMethod {
-
-    GET, POST;
-
+    fun respondUnauthorized(ctx: Context): Context {
+        return ctx.json(API.instance.formatError(401, "TOKEN IS NOT VALID"))
+                .status(401)
+                .header("Content-Type", "application/json")
+    }
 }

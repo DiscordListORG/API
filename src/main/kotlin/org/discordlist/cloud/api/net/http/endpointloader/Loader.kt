@@ -17,28 +17,20 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.cloud.api.core
+package org.discordlist.cloud.api.net.http.endpointloader
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import io.javalin.Context
-import org.apache.logging.log4j.LogManager
-import org.apache.logging.log4j.Logger
+import org.discordlist.cloud.api.net.http.get.Index
+import org.discordlist.cloud.api.net.http.post.Guild
 
-interface Endpoint {
+class Loader {
 
-    val route:String
-    val methode:RequestMethod
-    val logger:Logger
-    val mapper: ObjectMapper
-        get() = ObjectMapper()
-    val instace:API
-        get() = API.instance
+    val manager:Manager = Manager()
 
-    fun run(ctx:Context): Context
-}
-
-enum class RequestMethod {
-
-    GET, POST;
+    init {
+        manager.registerEndpoints(
+                Index(),
+                Guild()
+        )
+    }
 
 }
