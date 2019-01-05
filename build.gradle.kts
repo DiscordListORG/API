@@ -4,6 +4,7 @@ plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm").version("1.3.10")
     id("com.github.johnrengelman.shadow").version("4.0.3")
+    id("org.jetbrains.dokka").version("0.9.17")
     application
 }
 
@@ -33,9 +34,11 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 }
 
+
 application {
     mainClassName = "org.discordlist.api.BootstrapperKt"
 }
+
 
 tasks {
     "shadowJar"(ShadowJar::class) {

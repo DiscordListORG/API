@@ -20,7 +20,7 @@
   ~ along with this program.  If not, see https://www.gnu.org/licenses/.
   -->
 
-<Configuration packages="org.discordlist.api">
+<Configuration packages="org.discordlist.cloud.api">
     <Properties>
         <property name="fileDate">${date:dd-MM-yyyy}</property>
     </Properties>

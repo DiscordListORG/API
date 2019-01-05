@@ -1,7 +1,7 @@
 /*
  * API - The API component of the discordlist.org cloud
  *
- * Copyright (C) 2018  Leon Kappes & Yannick Seeger
+ * Copyright (C) 2019  Leon Kappes & Yannick Seeger
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,20 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.cloud.api.core
+package org.discordlist.cloud.api.net.http.endpointloader
 
-import io.javalin.Javalin
-import org.discordlist.cloud.api.io.Cassandra
-import org.simpleyaml.configuration.file.YamlFile
-import redis.clients.jedis.Jedis
+import org.discordlist.cloud.api.net.http.get.Index
+import org.discordlist.cloud.api.net.http.post.Guild
 
-interface IAPI {
+class Loader {
 
-    val config: YamlFile
+    val manager:Manager = Manager()
 
-    val javalin: Javalin
+    init {
+        manager.registerEndpoints(
+                Index(),
+                Guild()
+        )
+    }
 
-    val cassandra: Cassandra
-
-    val jedis: Jedis
 }

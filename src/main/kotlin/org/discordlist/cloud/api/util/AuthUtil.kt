@@ -1,7 +1,7 @@
 /*
  * API - The API component of the discordlist.org cloud
  *
- * Copyright (C) 2018  Leon Kappes & Yannick Seeger
+ * Copyright (C) 2019  Leon Kappes & Yannick Seeger
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,20 +17,20 @@
  * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
-package org.discordlist.cloud.api.core
+package org.discordlist.cloud.api.util
 
-import io.javalin.Javalin
-import org.discordlist.cloud.api.io.Cassandra
-import org.simpleyaml.configuration.file.YamlFile
-import redis.clients.jedis.Jedis
+import io.javalin.Context
+import org.discordlist.cloud.api.core.API
 
-interface IAPI {
+open class AuthUtil {
 
-    val config: YamlFile
+    fun checkDefaultAuth(ctx: Context): Boolean {
+        return ctx.header("Authorization") == API.instance.config.getString("api.token")
+    }
 
-    val javalin: Javalin
-
-    val cassandra: Cassandra
-
-    val jedis: Jedis
+    fun respondUnauthorized(ctx: Context): Context {
+        return ctx.json(API.instance.formatError(401, "TOKEN IS NOT VALID"))
+                .status(401)
+                .header("Content-Type", "application/json")
+    }
 }

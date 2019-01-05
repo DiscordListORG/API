@@ -1,7 +1,7 @@
 /*
  * API - The API component of the discordlist.org cloud
  *
- * Copyright (C) 2018  Leon Kappes & Yannick Seeger
+ * Copyright (C) 2019  Leon Kappes & Yannick Seeger
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,18 +19,26 @@
 
 package org.discordlist.cloud.api.core
 
-import io.javalin.Javalin
-import org.discordlist.cloud.api.io.Cassandra
-import org.simpleyaml.configuration.file.YamlFile
-import redis.clients.jedis.Jedis
+import com.fasterxml.jackson.databind.ObjectMapper
+import io.javalin.Context
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 
-interface IAPI {
+interface Endpoint {
 
-    val config: YamlFile
+    val route:String
+    val methode:RequestMethod
+    val logger:Logger
+    val mapper: ObjectMapper
+        get() = ObjectMapper()
+    val instace:API
+        get() = API.instance
 
-    val javalin: Javalin
+    fun run(ctx:Context): Context
+}
 
-    val cassandra: Cassandra
+enum class RequestMethod {
 
-    val jedis: Jedis
+    GET, POST;
+
 }
