@@ -19,7 +19,7 @@
 
 package org.discordlist.cloud.api.core
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.datastax.driver.core.DataType
 import io.javalin.Javalin
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager

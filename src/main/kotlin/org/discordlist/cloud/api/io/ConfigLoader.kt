@@ -35,6 +35,7 @@ class ConfigLoader(private val file: String) {
     private fun setDefaults(config: YamlFile) {
         // Bot
         saveDefault(config, "discord.token", "discordBotToken")
+        saveDefault(config, "discord.prefix", "p!")
 
         // API
         saveDefault(config, "api.port", 2000)
