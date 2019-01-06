@@ -32,6 +32,6 @@ fun main(args: Array<String>) {
             ConfigurationSource(ClassLoader.getSystemResourceAsStream("log4j2.xml"))
     )
 
-    API()
+    API(args)
 }
 

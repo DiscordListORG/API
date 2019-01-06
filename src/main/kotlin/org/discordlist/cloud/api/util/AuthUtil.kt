@@ -25,6 +25,8 @@ import org.discordlist.cloud.api.core.API
 open class AuthUtil {
 
     fun checkDefaultAuth(ctx: Context): Boolean {
+        if(API.instance.mode)
+            return true
         return ctx.header("Authorization") == API.instance.config.getString("api.token")
     }
 

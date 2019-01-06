@@ -19,7 +19,7 @@
 
 package org.discordlist.cloud.api.core
 
-import com.datastax.driver.core.DataType
+import com.fasterxml.jackson.databind.ObjectMapper
 import io.javalin.Javalin
 import org.apache.logging.log4j.Level
 import org.apache.logging.log4j.LogManager
@@ -30,14 +30,14 @@ import org.discordlist.cloud.api.util.ResponseUtil
 import org.simpleyaml.configuration.file.YamlFile
 import redis.clients.jedis.Jedis
 
-class API : IAPI, ResponseUtil() {
+class API(args: Array<String>) : IAPI, ResponseUtil() {
 
     private val log = LogManager.getLogger(API::class.java)
-    private val mapper: ObjectMapper = ObjectMapper()
     override val config: YamlFile = ConfigLoader("api.yml").load()
     override val javalin: Javalin
     override val cassandra: Cassandra
     override val jedis: Jedis
+    override val mode: Boolean = args.contains("dev-mode")
 
     companion object {
         @JvmStatic

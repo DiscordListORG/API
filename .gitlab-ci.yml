@@ -2,23 +2,22 @@ image: gradle:jdk11
 
 stages:
   - build
-
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-
-before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
+  - deploy
 
 build:
   stage: build
-  script: gradle shadowJar
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - build
-      - .gradle
+  script:
+    - gradle shadowJar
   artifacts:
     paths:
       - build/libs/*.jar
     expire_in: 1 week
+
+deploy_stage:
+  stage: deploy
+  script:
+    - apt-get update && apt-get install -y -qq sshpass
+    - export $SSHPASS=$USER_PASS
+    - cd target/
+    - sshpass -e scp -o stricthostkeychecking=no -r . $USER_NAME@$IP_ADDRESS:/opt/api/beta
+    - sshpass -e ssh -t $USER_NAME@$IP_ADDRESS "/opt/api/beta/update.sh"

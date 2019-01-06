@@ -20,7 +20,7 @@
 package org.discordlist.cloud.api.net.http.endpointloader
 
 import org.discordlist.cloud.api.net.http.get.Index
-import org.discordlist.cloud.api.net.http.post.Guild
+import org.discordlist.cloud.api.net.http.get.Guild
 
 class Loader {
 

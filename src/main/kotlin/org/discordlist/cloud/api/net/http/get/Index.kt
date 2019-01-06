@@ -32,10 +32,7 @@ class Index : Endpoint, AuthUtil() {
     override val methode: RequestMethod = RequestMethod.GET
 
     override fun run(ctx: Context):Context {
-        return if(checkDefaultAuth(ctx))
-            ctx.json(mapper.createObjectNode().set("data", this.mapper.createObjectNode().put("message", "Is this thing on?")))
+            return ctx.json(mapper.createObjectNode().set("data", this.mapper.createObjectNode().put("message", "Is this thing on?")))
                     .header("Content-Type", "application/json")
-        else
-            respondUnauthorized(ctx)
     }
 }

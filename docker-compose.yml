@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  api:
+    build: .
+    restart: always
+    volumes:
+      - "$PWD:/opt/api"
+    command: java -jar api.jar
