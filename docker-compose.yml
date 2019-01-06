@@ -4,6 +4,8 @@ services:
   api:
     build: .
     restart: always
+    ports:
+      - 2000:2000
     volumes:
       - "$PWD:/opt/api"
     command: java -jar api.jar
