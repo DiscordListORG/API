@@ -12,18 +12,14 @@ before_script:
 
 build:
   stage: build
-  script: gradle shadowJar
-  cache:
-    key: "$CI_COMMIT_REF_NAME"
-    policy: push
-    paths:
-      - build
-      - .gradle
+  script:
+    - gradle shadowJar
   artifacts:
     paths:
       - build/libs/*.jar
     expire_in: 1 week
-deploy:
+
+deploy_stage:
   stage: deploy
   script:
     - apt-get update && apt-get instally -y -qq sshpass
