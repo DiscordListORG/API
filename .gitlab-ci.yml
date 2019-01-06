@@ -18,6 +18,6 @@ deploy_stage:
   script:
     - apt-get update && apt-get install -y -qq sshpass
     - export SSHPASS=$USER_PASS
-    - cd target/
+    - cd build/libs/
     - sshpass -e scp -o stricthostkeychecking=no -r . $USER_NAME@$IP_ADDRESS:/opt/api/beta
     - sshpass -e ssh -t $USER_NAME@$IP_ADDRESS "/opt/api/beta/update.sh"
