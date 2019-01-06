@@ -1,4 +1,4 @@
-image: gradle:jdk11
+image: gradle:5.1-jdk11
 
 stages:
   - build
@@ -15,7 +15,8 @@ build:
 
 deploy_stage:
   stage: deploy
-  only: develop
+  only:
+    -  develop
   script:
     - apt-get update && apt-get install -y -qq sshpass
     - export SSHPASS=$USER_PASS
