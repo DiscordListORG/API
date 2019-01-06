@@ -4,12 +4,6 @@ stages:
   - build
   - deploy
 
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-
-before_script:
-  - export GRADLE_USER_HOME=`pwd`/.gradle
-
 build:
   stage: build
   script:
@@ -25,5 +19,5 @@ deploy_stage:
     - apt-get update && apt-get instally -y -qq sshpass
     - export $SSHPASS=$USER_PASS
     - cd target/
-    - sshpass -e scp -o stricthostkeychecking=no -r . $USER_NAME@$IP_ADRESS:/opt/api/beta
+    - sshpass -e scp -o stricthostkeychecking=no -r . $USER_NAME@$IP_ADDRESS:/opt/api/beta
     - sshpass -e ssh -t $USER_NAME@$IP_ADDRESS "/opt/api/beta/update.sh"
