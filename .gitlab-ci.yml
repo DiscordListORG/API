@@ -15,6 +15,7 @@ build:
 
 deploy_stage:
   stage: deploy
+  only: develop
   script:
     - apt-get update && apt-get install -y -qq sshpass
     - export SSHPASS=$USER_PASS
