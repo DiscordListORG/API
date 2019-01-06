@@ -33,4 +33,6 @@ interface IAPI {
     val cassandra: Cassandra
 
     val jedis: Jedis
+
+    val mode:Boolean
 }

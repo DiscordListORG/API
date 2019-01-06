@@ -22,6 +22,7 @@ package org.discordlist.cloud.api.util
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
+import org.discordlist.cloud.api.core.JsonSerializable
 import org.eclipse.jetty.http.HttpStatus
 import java.util.*
 
@@ -68,6 +69,18 @@ open class ResponseUtil {
      */
     fun formatResult(message: String, data: ObjectNode, code: Int): Any {
         return mapper.createObjectNode().put("message", message).put("timestamp", Date().time).put("code", code).set("data", data)
+    }
+
+    /**
+     * Format an Response with data, message and status code
+     *
+     * @param message Response message
+     * @param data API Entity
+     * @param code Http-Status Code of response
+     * @return returns an [com.fasterxml.jackson.databind.node.ObjectNode] with given data
+     */
+    fun formatResult(message: String, data: JsonSerializable, code: Int): Any {
+        return mapper.createObjectNode().put("message", message).put("timestamp", Date().time).put("code", code).putPOJO("data", data)
     }
 
 }

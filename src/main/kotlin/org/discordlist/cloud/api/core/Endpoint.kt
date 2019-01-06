@@ -21,7 +21,6 @@ package org.discordlist.cloud.api.core
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.javalin.Context
-import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 interface Endpoint {

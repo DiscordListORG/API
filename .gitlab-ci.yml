@@ -2,6 +2,7 @@ image: gradle:jdk11
 
 stages:
   - build
+  - deploy
 
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
@@ -22,3 +23,11 @@ build:
     paths:
       - build/libs/*.jar
     expire_in: 1 week
+deploy:
+  stage: deploy
+  script:
+    - apt-get update && apt-get instally -y -qq sshpass
+    - export $SSHPASS=$USER_PASS
+    - cd target/
+    - sshpass -e scp -o stricthostkeychecking=no -r . $USER_NAME@$IP_ADRESS:/opt/api/beta
+    - sshpass -e ssh -t $USER_NAME@&IP_ADRESS "/opt/api/beta/update.sh"
