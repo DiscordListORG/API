@@ -29,7 +29,8 @@ class Loader {
     init {
         manager.registerEndpoints(
                 Index(),
-                Guild()
+                Guild(),
+                org.discordlist.cloud.api.net.http.post.Guild()
         )
     }
 

@@ -35,9 +35,6 @@ public class Guild extends JsonSerializable {
         this.prefix = prefix;
     }
 
-    public Guild() {
-    }
-
     public static Guild fromJson(String jsonData) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.readValue(jsonData, Guild.class);

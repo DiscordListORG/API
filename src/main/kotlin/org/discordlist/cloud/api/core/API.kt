@@ -59,6 +59,7 @@ class API(args: Array<String>) : IAPI, ResponseUtil() {
         jedis = Jedis(config.getString("redis.host"))
         jedis.connect()
         jedis.auth(config.getString("redis.password"))
+        jedis.select(13)
         jedis.flushAll()
 
         Loader()
