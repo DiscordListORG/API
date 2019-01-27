@@ -31,7 +31,7 @@ class Manager {
     fun registerEndpoint(endpoint: Endpoint) {
         when(endpoint.methode) {
             RequestMethod.GET -> instance.javalin.get(endpoint.route) { ctx: Context -> endpoint.run(ctx) }
-            RequestMethod.POST -> instance.javalin.get(endpoint.route) { ctx: Context -> endpoint.run(ctx)  }
+            RequestMethod.POST -> instance.javalin.post(endpoint.route) { ctx: Context -> endpoint.run(ctx)  }
         }
     }
 
